@@ -3821,6 +3821,7 @@ MonoBehaviour:
   m_NormalCamera: {fileID: 11400000, guid: c6fcb892265b87d46bdeb50903a3787a, type: 2}
   m_AimSphere: {fileID: 1816674824}
   m_FireDistance: 30
+  m_AmmoText: {fileID: 707547576}
 --- !u!114 &1686210340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5723,7 +5724,7 @@ MonoBehaviour:
   m_weaponType: 1
   m_damage: 6
   m_maxAmmo: 30
-  m_fireRate: 40
+  m_fireRate: 8
   m_BulletPosition: {fileID: 1662397841}
   m_bulletPrefab: {fileID: 5958468704050465371, guid: c6c16c5a5e8415749ba012a7a204aea8,
     type: 3}

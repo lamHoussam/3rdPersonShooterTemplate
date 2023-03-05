@@ -1,4 +1,5 @@
 using CameraSystem;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -25,6 +26,9 @@ namespace ThirdPersonShooterTemplate
         [SerializeField] private Transform m_AimSphere;
         [SerializeField] private float m_FireDistance;
 
+        [Space]
+        [SerializeField] private TextMeshProUGUI m_AmmoText;
+
         private CameraController m_CameraController;
 
         private Animator m_Animator;
@@ -44,7 +48,7 @@ namespace ThirdPersonShooterTemplate
 
 
             m_AimConstraint.weight = 0;
-
+            SetAmmoText();
         }
 
         private void Update()
@@ -52,13 +56,15 @@ namespace ThirdPersonShooterTemplate
             if (m_Input.fire && CurrentWeapon)
             {
                 Shoot();
-                m_Input.fire = false;
+                //m_Input.fire = false;
+                SetAmmoText();
             }
 
             if (m_Input.reload && CurrentWeapon)
             {
                 CurrentWeapon.Reload();
                 m_Input.reload = false;
+                SetAmmoText();
             }
 
             if (m_Input.aim)
@@ -104,6 +110,8 @@ namespace ThirdPersonShooterTemplate
 
             m_LeftHandConstraint.weight = 1;
             m_Animator.SetLayerWeight(1, 1);
+
+            SetAmmoText();
         }
 
         public void DropWeapon()
@@ -111,6 +119,8 @@ namespace ThirdPersonShooterTemplate
             m_LeftHandConstraint.weight = 0;
             m_Animator.SetLayerWeight(1, 0);
             m_CurrentWeapon = null;
+
+            SetAmmoText();
         }
 
         public void AimLogic()
@@ -121,6 +131,14 @@ namespace ThirdPersonShooterTemplate
             m_AimConstraint.weight = IsAiming ? 1 : 0;
 
             m_CameraController.BlendBetweenCameraSettings(m_isAiming ? m_AimCamera : m_NormalCamera);
+        }
+
+        public void SetAmmoText()
+        {
+            if (!CurrentWeapon)
+                m_AmmoText.text = "";
+            else
+                m_AmmoText.text = CurrentWeapon.Ammo.ToString() + "/" + CurrentWeapon.MaxAmmo.ToString();
         }
 
     }

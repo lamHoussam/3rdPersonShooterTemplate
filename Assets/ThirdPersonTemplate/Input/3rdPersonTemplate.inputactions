@@ -25,7 +25,7 @@
                 },
                 {
                     "name": "Fire",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "0ccf7813-a836-4633-8aa3-26d6b4f5f276",
                     "expectedControlType": "Button",
                     "processors": "",
@@ -360,7 +360,7 @@
                 {
                     "name": "",
                     "id": "b15741d1-ab95-4f18-bce9-04b748f37162",
-                    "path": "<Keyboard>/r",
+                    "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -371,7 +371,7 @@
                 {
                     "name": "",
                     "id": "e45abffe-ebde-4680-8825-540dbaaf1150",
-                    "path": "<Gamepad>/buttonEast",
+                    "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -393,7 +393,7 @@
                 {
                     "name": "",
                     "id": "12875752-5866-4f28-bf50-2d2588409706",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -436,17 +436,6 @@
                 },
                 {
                     "name": "",
-                    "id": "ef4c1d05-4888-4049-932d-280c0652eb71",
-                    "path": "<Gamepad>/leftShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Switch",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "9a55dc92-ad7d-4e3b-9e24-b70767dd75af",
                     "path": "<Keyboard>/q",
                     "interactions": "",
@@ -458,22 +447,22 @@
                 },
                 {
                     "name": "",
-                    "id": "126a96cb-6086-4c8e-8802-252a96476930",
-                    "path": "<Gamepad>/buttonNorth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Cover",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "1b89580b-6c56-46f3-8d71-37d7bc28bd11",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
+                    "action": "Aim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "207ffa1c-e67b-4eca-9c5d-c476e94e9067",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
                     "action": "Aim",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -514,7 +503,7 @@
                 {
                     "name": "",
                     "id": "be10c4bc-5b94-4d24-8002-3dc2225509e3",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
