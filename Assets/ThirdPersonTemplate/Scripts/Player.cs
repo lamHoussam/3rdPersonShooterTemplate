@@ -15,7 +15,6 @@ namespace ThirdPersonTemplate
         [SerializeField] private CameraSettings m_AimCameraSettings;
 
         private bool m_rightShoulder;
-        private bool m_isAiming;
 
         public UnityEvent m_OnMove, m_OnJump, m_OnCrouch;
 
@@ -79,13 +78,13 @@ namespace ThirdPersonTemplate
                 m_Input.cover = false;
             }
 
-            if (m_Input.aim)
-            {
-                m_isAiming = !m_isAiming;
+            //if (m_Input.aim)
+            //{
+            //    m_isAiming = !m_isAiming;
 
-                m_Input.aim = false;
-                m_Camera.BlendBetweenCameraSettings(m_isAiming ? m_AimCameraSettings : m_StandCameraSettings);
-            }
+            //    m_Input.aim = false;
+            //    m_Camera.BlendBetweenCameraSettings(m_isAiming ? m_AimCameraSettings : m_StandCameraSettings);
+            //}
 
             if (m_Input.fire)
             {

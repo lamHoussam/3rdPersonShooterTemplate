@@ -11,7 +11,7 @@ namespace ThirdPersonTemplate
         [SerializeField] private float m_speed, m_walkSpeed;
         [SerializeField] private float m_acceleration;
 
-        [SerializeField] private float m_rotationSmoothTime;
+        [SerializeField] protected float m_rotationSmoothTime;
 
         // Jump
         [SerializeField] private float m_jumpForce;
@@ -44,23 +44,23 @@ namespace ThirdPersonTemplate
         // Cover
         [SerializeField] private float m_inCoverSpeed;
 
-        private float m_currentSpeed, m_targetSpeed;
-        private float m_targetRotation, m_rotationVelocity;
+        protected float m_currentSpeed, m_targetSpeed;
+        protected float m_targetRotation, m_rotationVelocity;
 
         private float m_verticalSpeed;
 
-        private bool m_isJumping, m_isFalling;
-        private bool m_canMove, m_canJump;
-        private bool m_isRolling;
-        private bool m_isSwimming;
+        protected bool m_isJumping, m_isFalling;
+        protected bool m_canMove, m_canJump;
+        protected bool m_isRolling;
+        protected bool m_isSwimming;
 
-        private bool m_inCover;
+        protected bool m_inCover;
         public bool InCover => m_inCover;
 
-        private bool m_isCrouched;
+        protected bool m_isCrouched;
         public bool IsCrouched => m_isCrouched;
 
-        private Vector3 m_planeMoveDirection;
+        protected Vector3 m_planeMoveDirection;
 
         #region Animation IDs
         private static readonly int m_animIDSpeed = Animator.StringToHash("Speed");
@@ -73,11 +73,11 @@ namespace ThirdPersonTemplate
         private static readonly int m_animIDClimb = Animator.StringToHash("Climb");
         #endregion
 
-        private CharacterController m_CharacterController;
-        private Animator m_Animator;
+        protected CharacterController m_CharacterController;
+        protected Animator m_Animator;
 
-        private PlayerRaycaster m_PlayerRaycaster;
-        private Player m_Player;
+        protected PlayerRaycaster m_PlayerRaycaster;
+        protected Player m_Player;
 
         private void Awake()
         {
@@ -100,7 +100,7 @@ namespace ThirdPersonTemplate
             m_planeMoveDirection = Vector2.zero;
         }
 
-        public void Move(Vector3 direction, bool isRunning = false, Transform camera = null)
+        public virtual void Move(Vector3 direction, bool isRunning = false, Transform camera = null)
         {
             if (!m_canMove)
             {
@@ -156,7 +156,7 @@ namespace ThirdPersonTemplate
             }
         }
 
-        public void Rotate(Vector3 inpDirection, out Vector3 finalDirection, Transform camera = null)
+        public virtual void Rotate(Vector3 inpDirection, out Vector3 finalDirection, Transform camera = null)
         {
             finalDirection = (m_isJumping || m_isFalling) && !m_isSwimming ? m_planeMoveDirection : Vector3.zero;
 
