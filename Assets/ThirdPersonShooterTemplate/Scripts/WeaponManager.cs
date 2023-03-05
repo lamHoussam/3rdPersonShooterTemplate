@@ -1,7 +1,5 @@
 using CameraSystem;
-using ThirdPersonTemplate;
 using UnityEngine;
-//using UnityEngine.AI;
 using UnityEngine.Animations.Rigging;
 
 namespace ThirdPersonShooterTemplate
@@ -17,10 +15,15 @@ namespace ThirdPersonShooterTemplate
 
         [SerializeField] private Transform m_WeaponParent;
         [SerializeField] private TwoBoneIKConstraint m_LeftHandConstraint;
+        [SerializeField] private MultiAimConstraint m_AimConstraint;
 
         [Space]
         [SerializeField] private CameraSettings m_AimCamera;
         [SerializeField] private CameraSettings m_NormalCamera;
+
+        [Space]
+        [SerializeField] private Transform m_AimSphere;
+        [SerializeField] private float m_FireDistance;
 
         private CameraController m_CameraController;
 
@@ -35,10 +38,12 @@ namespace ThirdPersonShooterTemplate
             m_Animator = GetComponentInChildren<Animator>();
             m_CameraController = Camera.main.GetComponent<CameraController>();
 
-            //DropWeapon();
-            m_LeftHandConstraint.weight = 1;
-            m_Animator.SetLayerWeight(1, 1);
+            DropWeapon();
+            //m_LeftHandConstraint.weight = 1;
+            //m_Animator.SetLayerWeight(1, 1);
 
+
+            m_AimConstraint.weight = 0;
 
         }
 
@@ -46,7 +51,7 @@ namespace ThirdPersonShooterTemplate
         {
             if (m_Input.fire && CurrentWeapon)
             {
-                CurrentWeapon.Shoot(transform.forward);
+                Shoot();
                 m_Input.fire = false;
             }
 
@@ -62,14 +67,40 @@ namespace ThirdPersonShooterTemplate
                 m_Input.aim = false;
             }
 
+            if (IsAiming)
+                Aim();
+
+        }
+
+        public virtual void Aim()
+        {
+            Vector2 centerPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
+            Ray ray = Camera.main.ScreenPointToRay(centerPoint);
+            Vector3 point = ray.origin + ray.direction * 30;
+
+            if (Physics.Raycast(ray, out RaycastHit hit, 30))
+            {
+                point = hit.point;
+            }
+
+            m_AimSphere.position = point;
+        }
+
+        public virtual void Shoot()
+        {
+            Vector3 shotDirection = (m_AimSphere.position - CurrentWeapon.ShotStartPosition).normalized;
+
+            CurrentWeapon.Shoot(shotDirection);
         }
 
         public void PickWeapon(Weapon weapon)
         {
-            weapon.transform.SetParent(m_WeaponParent);
+            m_CurrentWeapon = weapon;
 
-            weapon.transform.localPosition = Vector3.zero;
-            weapon.transform.localRotation = Quaternion.identity;
+            m_CurrentWeapon.transform.SetParent(m_WeaponParent);
+
+            m_CurrentWeapon.transform.localPosition = Vector3.zero;
+            m_CurrentWeapon.transform.localRotation = Quaternion.identity;
 
             m_LeftHandConstraint.weight = 1;
             m_Animator.SetLayerWeight(1, 1);
@@ -87,6 +118,7 @@ namespace ThirdPersonShooterTemplate
             m_isAiming = !m_isAiming;
             m_Animator.SetBool(m_animIDAim, m_isAiming);
 
+            m_AimConstraint.weight = IsAiming ? 1 : 0;
 
             m_CameraController.BlendBetweenCameraSettings(m_isAiming ? m_AimCamera : m_NormalCamera);
         }

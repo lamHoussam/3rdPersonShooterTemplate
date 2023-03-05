@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ThirdPersonTemplate;
+using UnityEngine.UIElements;
 
 namespace ThirdPersonShooterTemplate
 {
@@ -31,6 +32,7 @@ namespace ThirdPersonShooterTemplate
         private float m_timer;
 
         [SerializeField] private Transform m_BulletPosition;
+        public Vector3 ShotStartPosition => m_BulletPosition.position;
 
         private bool b_canShoot;
         public bool CanShoot => b_canShoot;
@@ -64,32 +66,17 @@ namespace ThirdPersonShooterTemplate
         public virtual void Shoot(Vector3 direction)
         {
             if (m_ammo == 0 || !b_canShoot) { return; }
-
-            //Debug.Log("Shoot");
-            //Debug.DrawRay(transform.position, Vector3.forward * 20, Color.red, 10);
-            //Bullet bullet = Instantiate(m_bulletPrefab, m_BulletPosition.position, transform.rotation).GetComponent<Bullet>();
-            //bullet.Damage = m_damage;
-            //bullet.GetComponent<Rigidbody>().AddForce(direction * 40, ForceMode.Impulse);
-
             if (m_MuzzleFlash)
                 m_MuzzleFlash.Play();
 
-            //Ray shotRay = new Ray(transform.position, direction);
-            //RaycastHit[] hits = Physics.RaycastAll(shotRay, 50);
-
-            //foreach (RaycastHit hit in hits)
-            //{
-            //    if (hit.transform.gameObject.TryGetComponent(out HealthComponent health))
-            //    {
-            //        health.TakeDamage(Damage, m_Player);
-            //    }
-            //}
+            Debug.DrawRay(ShotStartPosition, direction * 30, Color.red, 10);
 
             m_ammo--;
 
             m_timer = 0;
             b_canShoot = false;
         }
+
 
         public virtual void Reload() => m_ammo = MaxAmmo;
 

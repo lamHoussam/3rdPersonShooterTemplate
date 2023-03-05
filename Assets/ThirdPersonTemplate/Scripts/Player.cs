@@ -86,11 +86,11 @@ namespace ThirdPersonTemplate
             //    m_Camera.BlendBetweenCameraSettings(m_isAiming ? m_AimCameraSettings : m_StandCameraSettings);
             //}
 
-            if (m_Input.fire)
-            {
-                m_PlayerRaycaster.Fire();
-                m_Input.fire = false;
-            }
+            //if (m_Input.fire)
+            //{
+            //    m_PlayerRaycaster.Fire();
+            //    m_Input.fire = false;
+            //}
 
             if(m_NearInteractable != null && m_Input.interact)
             {
