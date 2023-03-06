@@ -1,4 +1,5 @@
 using CameraSystem;
+using ThirdPersonTemplate;
 using TMPro;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -21,10 +22,6 @@ namespace ThirdPersonShooterTemplate
         [SerializeField] private MultiAimConstraint m_AimConstraint;
 
         [Space]
-        [SerializeField] private CameraSettings m_AimCamera;
-        [SerializeField] private CameraSettings m_NormalCamera;
-
-        [Space]
         [SerializeField] private Transform m_AimSphere;
         [SerializeField] private float m_FireDistance;
 
@@ -33,7 +30,8 @@ namespace ThirdPersonShooterTemplate
         [Space]
         [SerializeField] private TextMeshProUGUI m_AmmoText;
 
-        private CameraController m_CameraController;
+        private CameraLogic m_CameraLogic;
+        private ThirdPersonTemplate.Player m_Player;
 
         private Animator m_Animator;
 
@@ -46,7 +44,8 @@ namespace ThirdPersonShooterTemplate
         {
             m_Input = GetComponent<ShooterInputAsset>();
             m_Animator = GetComponentInChildren<Animator>();
-            m_CameraController = Camera.main.GetComponent<CameraController>();
+            m_Player = GetComponent<ThirdPersonTemplate.Player>();
+            m_CameraLogic = Camera.main.GetComponent<CameraLogic>();
 
             DropWeapon();
 
@@ -142,9 +141,12 @@ namespace ThirdPersonShooterTemplate
             m_isAiming = !m_isAiming;
             m_Animator.SetBool(m_animIDAim, m_isAiming);
 
-            m_AimConstraint.weight = IsAiming ? 1 : 0;
+            string cameraSettingKey = m_Player.RightShoulder ? "right" : "left";
+            cameraSettingKey += m_isAiming ? "Aim" : "Stand";
 
-            m_CameraController.BlendBetweenCameraSettings(m_isAiming ? m_AimCamera : m_NormalCamera);
+            m_CameraLogic.SwitchCameraSetting(cameraSettingKey);
+
+            m_AimConstraint.weight = IsAiming ? 1 : 0;
         }
 
         public void SetAmmoText()

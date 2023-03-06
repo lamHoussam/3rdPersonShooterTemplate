@@ -900,10 +900,14 @@ MonoBehaviour:
     m_Setting: {fileID: 11400000, guid: 8e27efedb9ca5f3448136c840d93780c, type: 2}
   - m_name: crouch
     m_Setting: {fileID: 11400000, guid: 1f7becf5f1f76804087164bcf5831662, type: 2}
-  - m_name: coverLeft
+  - m_name: leftCover
     m_Setting: {fileID: 11400000, guid: 162aacffe0839af4797b2456a7b56724, type: 2}
-  - m_name: coverRight
+  - m_name: rightCover
     m_Setting: {fileID: 11400000, guid: 2a008f08fc21c9748b4c01c58a82ea95, type: 2}
+  - m_name: rightAim
+    m_Setting: {fileID: 11400000, guid: 86a2d32fd84ca1f48af3680731c5c03b, type: 2}
+  - m_name: leftAim
+    m_Setting: {fileID: 11400000, guid: 2448e64f1dc2bce4a847e2b26cf57811, type: 2}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -3716,7 +3720,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1686210330}
-  - component: {fileID: 1686210335}
+  - component: {fileID: 1686210341}
   - component: {fileID: 1686210340}
   - component: {fileID: 1686210339}
   - component: {fileID: 1686210337}
@@ -3778,63 +3782,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &1686210335
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1686210329}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6cfe4d7ce976466488b191dfad572153, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_OnMove:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1544731955}
-        m_TargetAssemblyTypeName: ThirdPersonTemplate.MovementInstruction, Assembly-CSharp
-        m_MethodName: OnCompleteInstruction
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  m_OnJump:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1477897701}
-        m_TargetAssemblyTypeName: ThirdPersonTemplate.JumpTutorialInstruction, Assembly-CSharp
-        m_MethodName: OnCompleteInstruction
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  m_OnCrouch:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 88748178}
-        m_TargetAssemblyTypeName: ThirdPersonTemplate.CrouchInstruction, Assembly-CSharp
-        m_MethodName: OnCompleteInstruction
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!143 &1686210336
 CharacterController:
   m_ObjectHideFlags: 0
@@ -3920,8 +3867,6 @@ MonoBehaviour:
   m_WeaponParent: {fileID: 72697823}
   m_LeftHandConstraint: {fileID: 1427711330}
   m_AimConstraint: {fileID: 1135204140}
-  m_AimCamera: {fileID: 11400000, guid: 86a2d32fd84ca1f48af3680731c5c03b, type: 2}
-  m_NormalCamera: {fileID: 11400000, guid: c6fcb892265b87d46bdeb50903a3787a, type: 2}
   m_AimSphere: {fileID: 1816674824}
   m_FireDistance: 30
   m_AmmoText: {fileID: 707547576}
@@ -3958,6 +3903,63 @@ MonoBehaviour:
   m_activateSwim: 0
   m_inCoverSpeed: 1.5
   m_aimAngleOverride: 60
+--- !u!114 &1686210341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1686210329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8800967894b445045812316869fe4c97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OnMove:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1544731955}
+        m_TargetAssemblyTypeName: ThirdPersonTemplate.MovementInstruction, Assembly-CSharp
+        m_MethodName: OnCompleteInstruction
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  m_OnJump:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1477897701}
+        m_TargetAssemblyTypeName: ThirdPersonTemplate.JumpTutorialInstruction, Assembly-CSharp
+        m_MethodName: OnCompleteInstruction
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  m_OnCrouch:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 88748178}
+        m_TargetAssemblyTypeName: ThirdPersonTemplate.CrouchInstruction, Assembly-CSharp
+        m_MethodName: OnCompleteInstruction
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1816674820
 GameObject:
   m_ObjectHideFlags: 0

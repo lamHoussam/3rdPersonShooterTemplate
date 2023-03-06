@@ -121,15 +121,15 @@ namespace ThirdPersonTemplate
             {
                 checkCanMove = m_PlayerRaycaster.CanGoLeftCover(-transform.forward);
                 m_Animator.SetFloat(m_animIDCoverDirection, val);
-                if (m_CameraLogic.CurrentState != "coverRight")
-                    m_CameraLogic.SwitchCameraSetting("coverRight");
+                if (m_CameraLogic.CurrentState != "rightCover")
+                    m_CameraLogic.SwitchCameraSetting("rightCover");
             }
             else if (val < 0)
             {
                 checkCanMove = m_PlayerRaycaster.CanGoRightCover(-transform.forward);
                 m_Animator.SetFloat(m_animIDCoverDirection, val);
-                if (m_CameraLogic.CurrentState != "coverLeft")
-                    m_CameraLogic.SwitchCameraSetting("coverLeft");
+                if (m_CameraLogic.CurrentState != "leftCover")
+                    m_CameraLogic.SwitchCameraSetting("leftCover");
             }
 
 
@@ -400,7 +400,7 @@ namespace ThirdPersonTemplate
             if (m_inCover || !m_PlayerRaycaster.CanTakeCover(out float angle, out _, out Vector3 point))
                 return;
 
-            m_CameraLogic.SwitchCameraSetting("coverLeft");
+            m_CameraLogic.SwitchCameraSetting("leftCover");
 
             m_inCover = true;
             m_Animator.SetBool(m_animIDInCover, InCover);

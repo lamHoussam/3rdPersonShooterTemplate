@@ -6,16 +6,16 @@ namespace ThirdPersonTemplate
 {
     public class Player : Humanoid
     {
-        private InputAsset m_Input;
-        private CameraController m_CameraController;
-        private PlayerRaycaster m_PlayerRaycaster;
+        protected InputAsset m_Input;
+        protected CameraController m_CameraController;
+        protected PlayerRaycaster m_PlayerRaycaster;
 
-        private bool m_rightShoulder;
+        protected bool m_rightShoulder;
         public bool RightShoulder => m_rightShoulder;
 
         public UnityEvent m_OnMove, m_OnJump, m_OnCrouch;
 
-        private IInteractable m_NearInteractable;
+        protected IInteractable m_NearInteractable;
 
         public override void Awake()
         {
@@ -51,7 +51,7 @@ namespace ThirdPersonTemplate
                 m_Input.roll = false;
             }
 
-            if(m_Input.crouch)
+            if (m_Input.crouch)
             {
                 m_Movement.ChangeCrouchStandState();
 
@@ -74,7 +74,7 @@ namespace ThirdPersonTemplate
                 m_Input.cover = false;
             }
 
-            if(m_NearInteractable != null && m_Input.interact)
+            if (m_NearInteractable != null && m_Input.interact)
             {
                 m_NearInteractable.OnInteract(this);
                 m_Input.interact = false;
@@ -82,7 +82,7 @@ namespace ThirdPersonTemplate
 
         }
 
-        public void SwitchShoulders()
+        public virtual void SwitchShoulders()
         {
             if (m_Movement.InCover)
                 return;
@@ -94,7 +94,7 @@ namespace ThirdPersonTemplate
 
         private void OnTriggerEnter(Collider other)
         {
-            if(other.TryGetComponent(out IInteractable interactable))
+            if (other.TryGetComponent(out IInteractable interactable))
             {
                 m_NearInteractable = interactable;
                 m_NearInteractable.OnBeginOverlap(this);
