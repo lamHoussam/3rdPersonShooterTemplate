@@ -1,3 +1,4 @@
+using CameraSystem;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -8,46 +9,46 @@ namespace ThirdPersonTemplate
     {
 
         // Basic Movement
-        [SerializeField] private float m_speed, m_walkSpeed;
-        [SerializeField] private float m_acceleration;
+        [SerializeField] protected float m_speed, m_walkSpeed;
+        [SerializeField] protected float m_acceleration;
 
         [SerializeField] protected float m_rotationSmoothTime;
 
         // Jump
-        [SerializeField] private float m_jumpForce;
-        [SerializeField] private float m_gravity;
-        [SerializeField] private float m_maxJumpSpeed;
+        [SerializeField] protected float m_jumpForce;
+        [SerializeField] protected float m_gravity;
+        [SerializeField] protected float m_maxJumpSpeed;
 
-        [SerializeField] private bool m_activateJump;
+        [SerializeField] protected bool m_activateJump;
 
 
         // Roll
-        [SerializeField] private float m_rollSpeed;
+        [SerializeField] protected float m_rollSpeed;
 
-        [SerializeField] private bool m_activateRoll;
+        [SerializeField] protected bool m_activateRoll;
 
 
         // Crouch
-        [SerializeField] private float m_crouchSpeed;
+        [SerializeField] protected float m_crouchSpeed;
 
-        [SerializeField] private float m_crouchHeight, m_standHeight;
-        [SerializeField] private float m_crouchCenter, m_standCenter;
+        [SerializeField] protected float m_crouchHeight, m_standHeight;
+        [SerializeField] protected float m_crouchCenter, m_standCenter;
 
-        [SerializeField] private bool m_activateCrouch;
+        [SerializeField] protected bool m_activateCrouch;
 
         // Swim
-        [SerializeField] private float m_swimSpeed;
-        [SerializeField] private float m_buoyantForce;
+        [SerializeField] protected float m_swimSpeed;
+        [SerializeField] protected float m_buoyantForce;
 
-        [SerializeField] private bool m_activateSwim;
+        [SerializeField] protected bool m_activateSwim;
 
         // Cover
-        [SerializeField] private float m_inCoverSpeed;
+        [SerializeField] protected float m_inCoverSpeed;
 
         protected float m_currentSpeed, m_targetSpeed;
         protected float m_targetRotation, m_rotationVelocity;
 
-        private float m_verticalSpeed;
+        protected float m_verticalSpeed;
 
         protected bool m_isJumping, m_isFalling;
         protected bool m_canMove, m_canJump;
@@ -63,14 +64,15 @@ namespace ThirdPersonTemplate
         protected Vector3 m_planeMoveDirection;
 
         #region Animation IDs
-        private static readonly int m_animIDSpeed = Animator.StringToHash("Speed");
-        private static readonly int m_animIDJump = Animator.StringToHash("Jump");
-        private static readonly int m_animIDIsFalling = Animator.StringToHash("IsFalling");
-        private static readonly int m_animIDRoll = Animator.StringToHash("Roll");
-        private static readonly int m_animIDCrouch = Animator.StringToHash("Crouch");
-        private static readonly int m_animIDSwimming = Animator.StringToHash("Swimming");
-        private static readonly int m_animIDInCover = Animator.StringToHash("InCover");
-        private static readonly int m_animIDClimb = Animator.StringToHash("Climb");
+        protected static readonly int m_animIDSpeed = Animator.StringToHash("Speed");
+        protected static readonly int m_animIDJump = Animator.StringToHash("Jump");
+        protected static readonly int m_animIDIsFalling = Animator.StringToHash("IsFalling");
+        protected static readonly int m_animIDRoll = Animator.StringToHash("Roll");
+        protected static readonly int m_animIDCrouch = Animator.StringToHash("Crouch");
+        protected static readonly int m_animIDSwimming = Animator.StringToHash("Swimming");
+        protected static readonly int m_animIDInCover = Animator.StringToHash("InCover");
+        protected static readonly int m_animIDCoverDirection = Animator.StringToHash("CoverDirection");
+        protected static readonly int m_animIDClimb = Animator.StringToHash("Climb");
         #endregion
 
         protected CharacterController m_CharacterController;
@@ -79,12 +81,16 @@ namespace ThirdPersonTemplate
         protected PlayerRaycaster m_PlayerRaycaster;
         protected Player m_Player;
 
-        private void Awake()
+        private CameraLogic m_CameraLogic;
+
+        public virtual void Awake()
         {
             m_CharacterController = GetComponent<CharacterController>();
             m_Animator = GetComponentInChildren<Animator>();
             m_PlayerRaycaster = GetComponent<PlayerRaycaster>();
             m_Player = GetComponent<Player>();
+
+            m_CameraLogic = Camera.main.GetComponent<CameraLogic>();
 
             m_currentSpeed = m_targetSpeed = 0;
             m_isFalling = false;
@@ -100,6 +106,46 @@ namespace ThirdPersonTemplate
             m_planeMoveDirection = Vector2.zero;
         }
 
+        private void CoverMove(Vector3 direction)
+        {
+            float val = direction.x == 0 ? 0 : -Mathf.Sign(direction.x);
+
+            if (direction.z != 0)
+            {
+                LeaveCover();
+                return;
+            }
+
+            bool checkCanMove = true;
+            if (val > 0)
+            {
+                checkCanMove = m_PlayerRaycaster.CanGoLeftCover(-transform.forward);
+                m_Animator.SetFloat(m_animIDCoverDirection, val);
+                if (m_CameraLogic.CurrentState != "coverRight")
+                    m_CameraLogic.SwitchCameraSetting("coverRight");
+            }
+            else if (val < 0)
+            {
+                checkCanMove = m_PlayerRaycaster.CanGoRightCover(-transform.forward);
+                m_Animator.SetFloat(m_animIDCoverDirection, val);
+                if (m_CameraLogic.CurrentState != "coverLeft")
+                    m_CameraLogic.SwitchCameraSetting("coverLeft");
+            }
+
+
+
+            m_targetSpeed = checkCanMove && val != 0 ? m_inCoverSpeed : 0;
+
+            m_currentSpeed = Mathf.Lerp(m_currentSpeed, m_targetSpeed, m_acceleration * Time.deltaTime);
+
+            Vector3 movement = m_currentSpeed * Time.deltaTime * val * transform.right + m_verticalSpeed * Time.deltaTime * Vector3.up;
+            Debug.DrawRay(transform.position, movement, Color.yellow, 10);
+            m_CharacterController.Move(movement);
+
+
+            m_Animator.SetFloat(m_animIDSpeed, m_currentSpeed);
+        }
+
         public virtual void Move(Vector3 direction, bool isRunning = false, Transform camera = null)
         {
             if (!m_canMove)
@@ -111,23 +157,11 @@ namespace ThirdPersonTemplate
 
             Rotate(direction, out Vector3 finalDirection, camera);
 
-            m_targetSpeed = m_isCrouched ? m_crouchSpeed : m_walkSpeed;
-            m_targetSpeed = InCover ? m_inCoverSpeed : m_targetSpeed;
-            m_targetSpeed = isRunning ? m_speed : m_targetSpeed;
-            m_targetSpeed = finalDirection == Vector3.zero ? 0 : m_targetSpeed;
-
-            m_currentSpeed = Mathf.Lerp(m_currentSpeed, m_targetSpeed, m_acceleration * Time.deltaTime);
 
 
             if (InCover)
             {
-                float val = finalDirection.x == 0 ? 0 : -Mathf.Sign(finalDirection.x);
-                Vector3 movement = m_currentSpeed * Time.deltaTime * val * transform.right + m_verticalSpeed * Time.deltaTime * Vector3.up;
-                Debug.DrawRay(transform.position, movement, Color.yellow, 10);
-                m_CharacterController.Move(movement);
-
-                m_Animator.SetFloat(m_animIDSpeed, m_currentSpeed);
-
+                CoverMove(finalDirection);
                 return;
             }
 
@@ -139,6 +173,12 @@ namespace ThirdPersonTemplate
 
                 return;
             }
+
+            m_targetSpeed = m_isCrouched ? m_crouchSpeed : m_walkSpeed;
+            m_targetSpeed = isRunning ? m_speed : m_targetSpeed;
+            m_targetSpeed = finalDirection == Vector3.zero ? 0 : m_targetSpeed;
+
+            m_currentSpeed = Mathf.Lerp(m_currentSpeed, m_targetSpeed, m_acceleration * Time.deltaTime);
 
             m_Animator.SetFloat(m_animIDSpeed, m_currentSpeed);
 
@@ -243,14 +283,6 @@ namespace ThirdPersonTemplate
 
         public void Gravity()
         {
-            //if (m_CharacterController.isGrounded)
-            //{
-            //    m_verticalSpeed = 0;
-            //    m_isFalling = false;
-            //    m_isJumping = false;
-            //    m_Animator.SetBool(m_animIDIsFalling, false);
-            //    //return;
-            //}
 
             m_isFalling = !m_CharacterController.isGrounded;
 
@@ -287,6 +319,7 @@ namespace ThirdPersonTemplate
             m_isCrouched = false;
 
             m_Animator.SetBool(m_animIDCrouch, m_isCrouched);
+            m_CameraLogic.SwitchCameraSetting(m_Player.RightShoulder ? "rightStand" : "leftStand");
             SetCharacterControllerHeightCenter();
 
             return true;
@@ -300,7 +333,9 @@ namespace ThirdPersonTemplate
             DeactivateMovement();
 
             m_Animator.SetBool(m_animIDCrouch, m_isCrouched);
-            if(m_Player.m_OnCrouch != null)
+            m_CameraLogic.SwitchCameraSetting("crouch");
+
+            if (m_Player.m_OnCrouch != null)
             {
                 m_Player.m_OnCrouch?.Invoke();
                 //m_Player.m_OnCrouch = null;
@@ -365,12 +400,14 @@ namespace ThirdPersonTemplate
             if (m_inCover || !m_PlayerRaycaster.CanTakeCover(out float angle, out _, out Vector3 point))
                 return;
 
+            m_CameraLogic.SwitchCameraSetting("coverLeft");
+
             m_inCover = true;
             m_Animator.SetBool(m_animIDInCover, InCover);
 
             Debug.LogWarning("Angle Value : " + angle);
             Vector3 direction = (transform.position - point).normalized;
-            Vector3 coverPosition = point + direction * m_CharacterController.radius * 1.1f;
+            Vector3 coverPosition = point + .9f * m_CharacterController.radius * direction;
 
             transform.position = coverPosition;
             transform.rotation = Quaternion.Euler(transform.eulerAngles + Vector3.up * (angle - 180));
@@ -385,6 +422,7 @@ namespace ThirdPersonTemplate
 
             m_inCover = false;
             m_Animator.SetBool(m_animIDInCover, m_inCover);
+            m_CameraLogic.SwitchCameraSetting(m_Player.RightShoulder ? "rightStand" : "leftStand");
         }
 
         public void SetCharacterControllerHeightCenter()

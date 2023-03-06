@@ -1,5 +1,6 @@
 using CameraSystem;
 using TMPro;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -27,6 +28,8 @@ namespace ThirdPersonShooterTemplate
         [SerializeField] private Transform m_AimSphere;
         [SerializeField] private float m_FireDistance;
 
+        private BlendTree m_BlendTree;
+
         [Space]
         [SerializeField] private TextMeshProUGUI m_AmmoText;
 
@@ -46,9 +49,6 @@ namespace ThirdPersonShooterTemplate
             m_CameraController = Camera.main.GetComponent<CameraController>();
 
             DropWeapon();
-            //m_LeftHandConstraint.weight = 1;
-            //m_Animator.SetLayerWeight(1, 1);
-
 
             m_AimConstraint.weight = 0;
             SetAmmoText();
@@ -59,7 +59,6 @@ namespace ThirdPersonShooterTemplate
             if (m_Input.fire && CurrentWeapon)
             {
                 Shoot();
-                //m_Input.fire = false;
                 SetAmmoText();
             }
 
@@ -82,6 +81,7 @@ namespace ThirdPersonShooterTemplate
             if (m_changeLeftHandWeight)
             {
                 m_LeftHandConstraint.weight = 1;
+                Debug.Log("Called here to change target weight");
                 m_changeLeftHandWeight = false;
             }
 
@@ -158,7 +158,6 @@ namespace ThirdPersonShooterTemplate
         public void Reload()
         {
             m_Animator.SetTrigger(m_animIDReload);
-            //m_LeftHandConstraint.data.targetPositionWeight = 0;
             m_LeftHandConstraint.weight = 0;
         }
 
