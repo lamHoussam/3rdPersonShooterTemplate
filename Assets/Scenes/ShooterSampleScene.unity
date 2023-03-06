@@ -898,8 +898,10 @@ MonoBehaviour:
     m_Setting: {fileID: 11400000, guid: 73c0cb43a561ed04fba1d5ceb1363137, type: 2}
   - m_name: leftStand
     m_Setting: {fileID: 11400000, guid: 8e27efedb9ca5f3448136c840d93780c, type: 2}
-  - m_name: crouch
+  - m_name: rightCrouch
     m_Setting: {fileID: 11400000, guid: 1f7becf5f1f76804087164bcf5831662, type: 2}
+  - m_name: leftCrouch
+    m_Setting: {fileID: 11400000, guid: 3d7a83e09b30e7541a754ed9ab4dbcfe, type: 2}
   - m_name: leftCover
     m_Setting: {fileID: 11400000, guid: 162aacffe0839af4797b2456a7b56724, type: 2}
   - m_name: rightCover

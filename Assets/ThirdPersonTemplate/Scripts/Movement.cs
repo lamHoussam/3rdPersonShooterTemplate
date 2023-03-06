@@ -110,7 +110,7 @@ namespace ThirdPersonTemplate
         {
             float val = direction.x == 0 ? 0 : -Mathf.Sign(direction.x);
 
-            if (direction.z != 0)
+            if (direction.z == -1)
             {
                 LeaveCover();
                 return;
@@ -333,7 +333,9 @@ namespace ThirdPersonTemplate
             DeactivateMovement();
 
             m_Animator.SetBool(m_animIDCrouch, m_isCrouched);
-            m_CameraLogic.SwitchCameraSetting("crouch");
+
+
+            m_CameraLogic.SwitchCameraSetting(m_Player.RightShoulder ? "rightCrouch" : "leftCrouch");
 
             if (m_Player.m_OnCrouch != null)
             {
