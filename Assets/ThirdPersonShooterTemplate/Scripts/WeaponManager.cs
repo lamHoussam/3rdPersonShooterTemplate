@@ -13,6 +13,7 @@ namespace ThirdPersonShooterTemplate
         private ShooterInputAsset m_Input;
 
         private static readonly int m_animIDAim = Animator.StringToHash("Aim");
+        private static readonly int m_animIDReload = Animator.StringToHash("Reload");
 
         [SerializeField] private Transform m_WeaponParent;
         [SerializeField] private TwoBoneIKConstraint m_LeftHandConstraint;
@@ -35,6 +36,8 @@ namespace ThirdPersonShooterTemplate
 
         private bool m_isAiming;
         public bool IsAiming => m_isAiming;
+
+        private bool m_changeLeftHandWeight = false;
 
         private void Awake()
         {
@@ -62,9 +65,9 @@ namespace ThirdPersonShooterTemplate
 
             if (m_Input.reload && CurrentWeapon)
             {
-                CurrentWeapon.Reload();
+
+                Reload();
                 m_Input.reload = false;
-                SetAmmoText();
             }
 
             if (m_Input.aim)
@@ -75,6 +78,12 @@ namespace ThirdPersonShooterTemplate
 
             if (IsAiming)
                 Aim();
+
+            if (m_changeLeftHandWeight)
+            {
+                m_LeftHandConstraint.weight = 1;
+                m_changeLeftHandWeight = false;
+            }
 
         }
 
@@ -112,10 +121,15 @@ namespace ThirdPersonShooterTemplate
             m_Animator.SetLayerWeight(1, 1);
 
             SetAmmoText();
+
+            m_CurrentWeapon.OnPickUp(GetComponent<ThirdPersonTemplate.Player>());
         }
 
         public void DropWeapon()
         {
+            m_CurrentWeapon?.OnDropDown(GetComponent<ThirdPersonTemplate.Player>());
+
+
             m_LeftHandConstraint.weight = 0;
             m_Animator.SetLayerWeight(1, 0);
             m_CurrentWeapon = null;
@@ -141,5 +155,19 @@ namespace ThirdPersonShooterTemplate
                 m_AmmoText.text = CurrentWeapon.Ammo.ToString() + "/" + CurrentWeapon.MaxAmmo.ToString();
         }
 
+        public void Reload()
+        {
+            m_Animator.SetTrigger(m_animIDReload);
+            //m_LeftHandConstraint.data.targetPositionWeight = 0;
+            m_LeftHandConstraint.weight = 0;
+        }
+
+        public void OnStopReload()
+        {
+            CurrentWeapon.Reload();
+            SetAmmoText();
+            m_changeLeftHandWeight = true;
+            Debug.Log(m_LeftHandConstraint.weight);
+        }
     }
 }

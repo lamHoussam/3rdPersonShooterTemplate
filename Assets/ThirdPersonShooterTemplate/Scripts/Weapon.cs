@@ -46,13 +46,16 @@ namespace ThirdPersonShooterTemplate
         [SerializeField] private ParticleSystem m_MuzzleFlash;
 
 
-
+        protected ThirdPersonTemplate.Player m_Holder;
 
         protected virtual void Awake()
         {
             m_ammo = m_maxAmmo;
             b_canShoot = true;
             m_timer = 0;
+
+
+            m_Holder = null;
 
         }
 
@@ -61,6 +64,12 @@ namespace ThirdPersonShooterTemplate
             m_timer += Time.deltaTime;
             if (m_timer >= m_fireRate / 60.0f && !b_canShoot)
                 b_canShoot = true;
+
+
+            if(m_Holder == null)
+            {
+                transform.Rotate(75 * Time.deltaTime * Vector3.up);
+            }
         }
 
         public virtual void Shoot(Vector3 direction)
@@ -93,6 +102,16 @@ namespace ThirdPersonShooterTemplate
         public void OnEndOverlap(ThirdPersonTemplate.Player player)
         {
             //throw new System.NotImplementedException();
+        }
+
+        public void OnPickUp(ThirdPersonTemplate.Player player)
+        {
+            m_Holder = player;
+        }
+
+        public void OnDropDown(ThirdPersonTemplate.Player player)
+        {
+            m_Holder = null;
         }
     }
 }
