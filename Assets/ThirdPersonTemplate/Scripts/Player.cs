@@ -7,13 +7,14 @@ namespace ThirdPersonTemplate
     public class Player : Humanoid
     {
         protected InputAsset m_Input;
+
         protected CameraController m_CameraController;
+        protected CameraLogicGraph m_CameraGraph;
+
         protected PlayerRaycaster m_PlayerRaycaster;
 
         protected bool m_rightShoulder;
         public bool RightShoulder => m_rightShoulder;
-
-        public UnityEvent m_OnMove, m_OnJump, m_OnCrouch;
 
         protected IInteractable m_NearInteractable;
 
@@ -24,10 +25,12 @@ namespace ThirdPersonTemplate
             m_Input = GetComponent<InputAsset>();
 
             m_CameraController = Camera.main.GetComponent<CameraController>();
+            m_CameraGraph = m_CameraController.GetComponent<CameraLogicGraph>();
 
             m_PlayerRaycaster = GetComponent<PlayerRaycaster>();
 
             m_rightShoulder = true;
+
 
         }
 
@@ -51,14 +54,14 @@ namespace ThirdPersonTemplate
                 m_Input.roll = false;
             }
 
-            if (m_Input.crouch)
+            if(m_Input.crouch)
             {
                 m_Movement.ChangeCrouchStandState();
 
                 m_Input.crouch = false;
             }
 
-            if (m_Input.switchShoulder)
+            if (m_Input.switchShoulder && !m_Movement.InCover)
             {
                 SwitchShoulders();
                 m_Input.switchShoulder = false;
@@ -74,7 +77,7 @@ namespace ThirdPersonTemplate
                 m_Input.cover = false;
             }
 
-            if (m_NearInteractable != null && m_Input.interact)
+            if(m_NearInteractable != null && m_Input.interact)
             {
                 m_NearInteractable.OnInteract(this);
                 m_Input.interact = false;
@@ -84,17 +87,16 @@ namespace ThirdPersonTemplate
 
         public virtual void SwitchShoulders()
         {
-            if (m_Movement.InCover)
-                return;
+            //if (m_Movement.InCover)
+            //    return;
 
             m_rightShoulder = !m_rightShoulder;
-
-            m_CameraController.GetComponent<CameraLogic>().SwitchCameraSetting(m_rightShoulder ? "rightStand" : "leftStand");
+            m_CameraGraph.SetBool("rightShoulder", m_rightShoulder);
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out IInteractable interactable))
+            if(other.TryGetComponent(out IInteractable interactable))
             {
                 m_NearInteractable = interactable;
                 m_NearInteractable.OnBeginOverlap(this);

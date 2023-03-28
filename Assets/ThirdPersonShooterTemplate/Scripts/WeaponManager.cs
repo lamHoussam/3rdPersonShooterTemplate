@@ -30,10 +30,11 @@ namespace ThirdPersonShooterTemplate
         [Space]
         [SerializeField] private TextMeshProUGUI m_AmmoText;
 
-        private CameraLogic m_CameraLogic;
         private ThirdPersonTemplate.Player m_Player;
 
         private Animator m_Animator;
+
+        private CameraLogicGraph m_CameraLogicGraph;
 
         private bool m_isAiming;
         public bool IsAiming => m_isAiming;
@@ -45,7 +46,7 @@ namespace ThirdPersonShooterTemplate
             m_Input = GetComponent<ShooterInputAsset>();
             m_Animator = GetComponentInChildren<Animator>();
             m_Player = GetComponent<ThirdPersonTemplate.Player>();
-            m_CameraLogic = Camera.main.GetComponent<CameraLogic>();
+            m_CameraLogicGraph = Camera.main.GetComponent<CameraLogicGraph>();
 
             DropWeapon();
 
@@ -141,10 +142,7 @@ namespace ThirdPersonShooterTemplate
             m_isAiming = !m_isAiming;
             m_Animator.SetBool(m_animIDAim, m_isAiming);
 
-            string cameraSettingKey = m_Player.RightShoulder ? "right" : "left";
-            cameraSettingKey += m_isAiming ? "Aim" : "Stand";
-
-            m_CameraLogic.SwitchCameraSetting(cameraSettingKey);
+            m_CameraLogicGraph.SetBool("aim", m_isAiming);
 
             m_AimConstraint.weight = IsAiming ? 1 : 0;
         }

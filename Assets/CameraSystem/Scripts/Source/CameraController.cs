@@ -1,18 +1,9 @@
-using System.Collections;
-using UnityEditor;
 using UnityEngine;
 
 namespace CameraSystem
 {
     public class CameraController : MonoBehaviour
     {
-        public enum CameraType
-        {
-            Controllable, 
-            NonControllable,
-        }
-
-
         [SerializeField] private Transform m_Target;
 
         [SerializeField] private float m_distance;
@@ -27,7 +18,7 @@ namespace CameraSystem
         private float m_targetDistance;
         private Vector3 m_expectedPos, m_realOffset;
 
-        [SerializeField] private bool m_useYawLimit;
+        [SerializeField] private bool m_useYawLimit, m_usePitchLimit;
         [SerializeField] private float m_minPitchValue = -10, m_maxPitchValue = 70;
         [SerializeField] private float m_yawMinValue = -50, m_yawMaxValue = 50;
 
@@ -37,13 +28,12 @@ namespace CameraSystem
         [SerializeField] private bool m_active;
         public bool Active => m_active;
 
-        [SerializeField] private float m_transitionLerpTime;
+        [SerializeField] private float m_transitionTime;
         [SerializeField] private AnimationCurve m_TransitionCurve;
 
         [SerializeField] private CameraSettings m_CameraSettingsToLoad;
 
-        [SerializeField] private CameraType m_CameraType;
-        public CameraType Type => m_CameraType;
+        [SerializeField] private Transform m_TargetLockOn;
 
         private bool m_isBlending;
 
@@ -53,40 +43,53 @@ namespace CameraSystem
 
         private CameraSettings m_TargetSettings;
 
-
         [SerializeField] private float m_yaw, m_pitch;
 
-        private void LateUpdate()
+        //private float m_distVar;
+        private float m_previousDistance;
+        private Vector2 m_previousOffset;
+
+        private bool m_isLockedOnTarget;
+
+        private void Awake()
+        {
+            m_previousDistance = m_distance;
+            m_previousOffset = m_offset;
+
+            //ActivateLockOn(m_TargetLockOn);
+        }
+
+        public void LateUpdate()
         {
             if (!m_Target || !Active) return;
-            if(m_CameraType == CameraType.Controllable)
-                SetPitchYaw();
 
-            ThirdPersonCamera();
+#if ENABLE_LEGACY_INPUT_MANAGER
+            SetPitchYaw();
+#endif
+
+            if (m_isLockedOnTarget)
+                LockOn();
+            else
+                ThirdPersonCamera();
         }
 
         private void Update()
         {
-            if (!m_isBlending)
-                return;
-
-            t += Time.deltaTime;
-
-            float variation = m_TransitionCurve.Evaluate(t) * Time.deltaTime * m_transitionLerpTime;
-
-            m_distance += variation * m_blendDistanceVariation;
-            m_offset += variation * m_blendOffsetVariation;
-
-            //m_distance = Mathf.Lerp(m_distance, m_TargetSettings.Distance, m_transitionLerpTime * Time.deltaTime);
-            //m_offset = Vector2.Lerp(m_offset, m_TargetSettings.Offset, m_transitionLerpTime * Time.deltaTime);
-
-            if (Mathf.Abs(m_TargetSettings.Distance - m_distance) < .1f && Vector2.Distance(m_offset, m_TargetSettings.Offset) < .1f)
-                SetCameraSettings(m_TargetSettings);
+            if (m_isBlending)
+                Blend();
         }
 
 
+        /// <summary>
+        /// Change camera's pitch and yaw 
+        /// </summary>
+        /// <param name="look">Pitch, Yaw values to add </param>
         public void SetPitchYaw(Vector2 look)
         {
+            if (m_isLockedOnTarget)
+                return;
+
+
             m_pitch += Time.deltaTime * look.y * m_sensitivity.y;
             m_yaw += Time.deltaTime * look.x * m_sensitivity.x;
 
@@ -96,9 +99,13 @@ namespace CameraSystem
         }
 
         public void SetPitchYaw(float x, float y) => SetPitchYaw(new Vector2(x, y));
-        public void SetPitchYaw() => SetPitchYaw(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-        
 
+#if ENABLE_LEGACY_INPUT_MANAGER
+        public void SetPitchYaw() => SetPitchYaw(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+#endif
+        /// <summary>
+        /// Third Person Camera
+        /// </summary>
         public void ThirdPersonCamera()
         {
             m_targetDistance = m_distance;
@@ -141,6 +148,30 @@ namespace CameraSystem
 
         }
 
+        public void ActivateLockOn(Transform targetLock)
+        {
+            m_isLockedOnTarget = true;
+
+            m_TargetLockOn = targetLock;
+        }
+
+        private void LockOn(Transform targetLock)
+        {
+            Vector3 dir = m_Target.position - targetLock.position;
+            Vector3 camPosition = dir + dir.normalized * m_distance;
+            m_realOffset = transform.right * m_offset.x + Vector3.up * m_offset.y;
+
+            transform.position = targetLock.position + camPosition + m_realOffset;
+            transform.LookAt(targetLock.position);
+        }
+
+        private void LockOn() => LockOn(m_TargetLockOn);
+
+        public void DeactivateLockOn()
+        {
+            m_isLockedOnTarget = false;
+        }
+
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
         {
             if (lfAngle < -360f) lfAngle += 360f;
@@ -148,6 +179,12 @@ namespace CameraSystem
             return Mathf.Clamp(lfAngle, lfMin, lfMax);
         }
 
+        /// <summary>
+        /// Rotate vector vec angle degrees
+        /// </summary>
+        /// <param name="vec">Vector to rotate</param>
+        /// <param name="angle">Angle in degrees</param>
+        /// <returns>Rotation result</returns>
         public static Vector3 RotateVector(Vector3 vec, float angle)
         {
             float cos = Mathf.Cos(angle * Mathf.Deg2Rad);
@@ -160,15 +197,22 @@ namespace CameraSystem
             );
         }
 
+        /// <summary>
+        /// Set Camera new settings
+        /// </summary>
+        /// <param name="settings"></param>
         public void SetCameraSettings(CameraSettings settings)
         {
             m_offset = settings.Offset;
             m_distance = settings.Distance;
             m_cameraLerpTime = settings.CameraLerpTime;
-            m_sensitivity = settings.Sensitivity;
             StopBlend();
         }
 
+        /// <summary>
+        /// Initiate Camera blend to new settings
+        /// </summary>
+        /// <param name="settings"></param>
         public void BlendBetweenCameraSettings(CameraSettings settings)
         {
             m_isBlending = true;
@@ -179,9 +223,30 @@ namespace CameraSystem
             m_blendDistanceVariation = settings.Distance - m_distance;
             m_blendOffsetVariation = settings.Offset - m_offset;
 
+            m_previousDistance = m_distance;
+            m_previousOffset = m_offset;
+
             t = 0;
         }
 
+        private void Blend()
+        {
+            t += Time.deltaTime;
+
+            float val = m_TransitionCurve.Evaluate(t / m_transitionTime);
+
+            m_distance = val * m_blendDistanceVariation + m_previousDistance;
+            m_offset = val * m_blendOffsetVariation + m_previousOffset;
+
+            Debug.LogWarning("Value : " + val);
+
+            if (t >= m_transitionTime)
+                SetCameraSettings(m_TargetSettings);
+        }
+
+        /// <summary>
+        /// Stop Camera blend
+        /// </summary>
         public void StopBlend()
         {
             m_isBlending = false;

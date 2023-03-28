@@ -1,5 +1,5 @@
 {
-    "name": "3rdPersonTemplate",
+    "name": "3rdPersonShooterTemplate",
     "maps": [
         {
             "name": "Player",
@@ -426,7 +426,7 @@
                 {
                     "name": "",
                     "id": "89cbf28e-a470-494a-928e-9c6771495a9c",
-                    "path": "<Keyboard>/n",
+                    "path": "<Keyboard>/z",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",

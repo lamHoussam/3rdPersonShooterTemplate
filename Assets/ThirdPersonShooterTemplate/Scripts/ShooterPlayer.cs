@@ -22,15 +22,8 @@ namespace ThirdPersonShooterTemplate
 
             m_rightShoulder = !m_rightShoulder;
 
-            string cameraSettingKey = m_rightShoulder ? "right" : "left";
-            if (m_Movement.IsCrouched)
-            {
-                m_CameraController.GetComponent<CameraLogic>().SwitchCameraSetting(cameraSettingKey + "Crouch");
-                return;
-            }
-            cameraSettingKey += m_WeaponManager.IsAiming ? "Aim" : "Stand";
 
-            m_CameraController.GetComponent<CameraLogic>().SwitchCameraSetting(cameraSettingKey);
+            m_CameraController.GetComponent<CameraLogicGraph>().SetBool("rightShoulder", m_rightShoulder);
 
         }
     }

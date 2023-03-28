@@ -833,6 +833,7 @@ MonoBehaviour:
   m_cameraLerpTime: 40
   m_sensitivity: {x: 25, y: 25}
   m_useYawLimit: 0
+  m_usePitchLimit: 0
   m_minPitchValue: -10
   m_maxPitchValue: 70
   m_yawMinValue: -180
@@ -842,28 +843,19 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 129
   m_active: 1
-  m_transitionLerpTime: 12
+  m_transitionTime: 0.3
   m_TransitionCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 5.523818
-      outSlope: 5.523818
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.01978761
-    - serializedVersion: 3
-      time: 0.53441215
-      value: 1.1914468
-      inSlope: -0.058522344
-      outSlope: -0.058522344
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
@@ -878,7 +870,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   m_CameraSettingsToLoad: {fileID: 11400000, guid: c6fcb892265b87d46bdeb50903a3787a,
     type: 2}
-  m_CameraType: 0
+  m_TargetLockOn: {fileID: 0}
   m_yaw: 0
   m_pitch: 0
 --- !u!114 &330585549
@@ -890,26 +882,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 330585543}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a37fd7a2f23042845ae9322558ca72fb, type: 3}
+  m_Script: {fileID: 11500000, guid: e254b1034d7651b4cbebfa0f5cc0a4d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_triggerEvents:
-  - m_name: rightStand
-    m_Setting: {fileID: 11400000, guid: 73c0cb43a561ed04fba1d5ceb1363137, type: 2}
-  - m_name: leftStand
-    m_Setting: {fileID: 11400000, guid: 8e27efedb9ca5f3448136c840d93780c, type: 2}
-  - m_name: rightCrouch
-    m_Setting: {fileID: 11400000, guid: 1f7becf5f1f76804087164bcf5831662, type: 2}
-  - m_name: leftCrouch
-    m_Setting: {fileID: 11400000, guid: 3d7a83e09b30e7541a754ed9ab4dbcfe, type: 2}
-  - m_name: leftCover
-    m_Setting: {fileID: 11400000, guid: 162aacffe0839af4797b2456a7b56724, type: 2}
-  - m_name: rightCover
-    m_Setting: {fileID: 11400000, guid: 2a008f08fc21c9748b4c01c58a82ea95, type: 2}
-  - m_name: rightAim
-    m_Setting: {fileID: 11400000, guid: 86a2d32fd84ca1f48af3680731c5c03b, type: 2}
-  - m_name: leftAim
-    m_Setting: {fileID: 11400000, guid: 2448e64f1dc2bce4a847e2b26cf57811, type: 2}
+  m_LogicCanvas: {fileID: 11400000, guid: 3e53186b082de2048ae27f083f70e371, type: 2}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -3904,6 +3880,7 @@ MonoBehaviour:
   m_buoyantForce: 0
   m_activateSwim: 0
   m_inCoverSpeed: 1.5
+  m_climbSpeed: 0
   m_aimAngleOverride: 60
 --- !u!114 &1686210341
 MonoBehaviour:
@@ -3917,51 +3894,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8800967894b445045812316869fe4c97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnMove:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1544731955}
-        m_TargetAssemblyTypeName: ThirdPersonTemplate.MovementInstruction, Assembly-CSharp
-        m_MethodName: OnCompleteInstruction
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  m_OnJump:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1477897701}
-        m_TargetAssemblyTypeName: ThirdPersonTemplate.JumpTutorialInstruction, Assembly-CSharp
-        m_MethodName: OnCompleteInstruction
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  m_OnCrouch:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 88748178}
-        m_TargetAssemblyTypeName: ThirdPersonTemplate.CrouchInstruction, Assembly-CSharp
-        m_MethodName: OnCompleteInstruction
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &1816674820
 GameObject:
   m_ObjectHideFlags: 0
