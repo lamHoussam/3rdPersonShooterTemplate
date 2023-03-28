@@ -40,7 +40,7 @@ namespace ThirdPersonShooterTemplate
         private int m_ammo;
         public int Ammo => m_ammo;
 
-        [SerializeField] private GameObject m_bulletPrefab;
+        [SerializeField] private GameObject m_BulletPrefab;
         //[SerializeField] private Transform m_bulletStartPosition;
 
         [SerializeField] private ParticleSystem m_MuzzleFlash;

@@ -885,7 +885,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e254b1034d7651b4cbebfa0f5cc0a4d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_LogicCanvas: {fileID: 11400000, guid: 3e53186b082de2048ae27f083f70e371, type: 2}
+  m_LogicCanvas: {fileID: 11400000, guid: 3bc23654374a62147985113c9989c4c8, type: 2}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -6251,8 +6251,7 @@ MonoBehaviour:
   m_maxAmmo: 30
   m_fireRate: 8
   m_BulletPosition: {fileID: 1662397841}
-  m_bulletPrefab: {fileID: 5958468704050465371, guid: c6c16c5a5e8415749ba012a7a204aea8,
-    type: 3}
+  m_BulletPrefab: {fileID: 0}
   m_MuzzleFlash: {fileID: 0}
 --- !u!65 &3469287836635505007
 BoxCollider:
@@ -6671,8 +6670,7 @@ MonoBehaviour:
   m_maxAmmo: 25
   m_fireRate: 12
   m_BulletPosition: {fileID: 671941334}
-  m_bulletPrefab: {fileID: 5958468704050465371, guid: c6c16c5a5e8415749ba012a7a204aea8,
-    type: 3}
+  m_BulletPrefab: {fileID: 0}
   m_MuzzleFlash: {fileID: 0}
 --- !u!65 &4337702552059846900
 BoxCollider:
