@@ -17,14 +17,7 @@ namespace ThirdPersonShooterTemplate
 
         public override void SwitchShoulders()
         {
-            if (m_Movement.InCover)
-                return;
-
-            m_rightShoulder = !m_rightShoulder;
-
-
-            m_CameraController.GetComponent<CameraLogicGraph>().SetBool("rightShoulder", m_rightShoulder);
-
+            base.SwitchShoulders();
         }
     }
 }

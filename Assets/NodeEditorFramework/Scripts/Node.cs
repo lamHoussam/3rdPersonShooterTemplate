@@ -47,7 +47,7 @@ namespace NodeEditorFramework
             {
                 if (m_Connections[i].EvaluateConditions())
                 {
-                    Debug.LogError(m_Connections[i].To);
+                    //Debug.LogError(m_Connections[i].To);
                     return m_Connections[i].To;
                 }
             }

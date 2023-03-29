@@ -90,7 +90,12 @@ namespace ThirdPersonShooterTemplate
         public virtual void Aim()
         {
             Vector2 centerPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
-            Ray ray = Camera.main.ScreenPointToRay(centerPoint);
+            Ray ray = m_CameraLogicGraph.GetComponent<Camera>().ScreenPointToRay(centerPoint);
+            //Vector3 direction = ray.direction + (m_CurrentWeapon != null ? Vector3.zero : Vector3.zero);
+
+            //Debug.LogWarning("Vector : " + ray.direction + "; Rotated : " + direction);
+
+            //ray.direction = direction;
             Vector3 point = ray.origin + ray.direction * 30;
 
             if (Physics.Raycast(ray, out RaycastHit hit, 30))
@@ -99,11 +104,23 @@ namespace ThirdPersonShooterTemplate
             }
 
             m_AimSphere.position = point;
+
+            if (m_CurrentWeapon)
+            {
+                float ang = Vector3.SignedAngle(m_AimSphere.position - m_CurrentWeapon.transform.position, -m_CurrentWeapon.transform.forward, Vector3.right);
+                ang *= Mathf.Rad2Deg;
+
+
+                m_CurrentWeapon.SetRotate(ang);
+            }
         }
 
         public virtual void Shoot()
         {
             Vector3 shotDirection = (m_AimSphere.position - CurrentWeapon.ShotStartPosition).normalized;
+
+            //Vector3 direction = m_CurrentWeapon == null ? shotDirection : MathsUtility.RotateVector(shotDirection, m_CurrentWeapon.transform.eulerAngles.x, MathsUtility.Axis.X);
+            //Vector3 direction = m_CurrentWeapon == null ? shotDirection : ;
 
             CurrentWeapon.Shoot(shotDirection);
         }

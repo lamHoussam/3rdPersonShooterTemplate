@@ -67,7 +67,7 @@ namespace CameraSystem
             else
                 m_CameraController.SetCameraSettings(evalNode.Settings);
 
-            Debug.LogError(evalNode.Settings);
+            //Debug.LogError(evalNode.Settings);
             return evalNode.Settings;
         }
     }

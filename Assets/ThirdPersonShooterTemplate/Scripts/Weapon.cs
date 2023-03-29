@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using ThirdPersonTemplate;
-using UnityEngine.UIElements;
+using Unity.VisualScripting;
 
 namespace ThirdPersonShooterTemplate
 {
@@ -31,6 +29,12 @@ namespace ThirdPersonShooterTemplate
         public float FireRate => m_fireRate;
         private float m_timer;
 
+
+        [SerializeField] private float m_verticalRecoil, m_horizontalRecoil;
+        [SerializeField] private float m_recoilSpeed = 20;
+        [SerializeField] private float m_recoilSmoothTime = 1;
+        private float m_currentRecoilAngle;
+         
         [SerializeField] private Transform m_BulletPosition;
         public Vector3 ShotStartPosition => m_BulletPosition.position;
 
@@ -48,12 +52,14 @@ namespace ThirdPersonShooterTemplate
 
         protected ThirdPersonTemplate.Player m_Holder;
 
+        private Quaternion m_initialRotation;
+
         protected virtual void Awake()
         {
             m_ammo = m_maxAmmo;
             b_canShoot = true;
             m_timer = 0;
-
+            m_currentRecoilAngle = 0;
 
             m_Holder = null;
 
@@ -67,9 +73,9 @@ namespace ThirdPersonShooterTemplate
 
 
             if(m_Holder == null)
-            {
                 transform.Rotate(75 * Time.deltaTime * Vector3.up);
-            }
+
+            Reposition();
         }
 
         public virtual void Shoot(Vector3 direction)
@@ -78,12 +84,15 @@ namespace ThirdPersonShooterTemplate
             if (m_MuzzleFlash)
                 m_MuzzleFlash.Play();
 
+            direction = MathsUtility.RotateVector(direction, m_currentRecoilAngle, MathsUtility.Axis.X);
+
             Debug.DrawRay(ShotStartPosition, direction * 30, Color.red, 10);
 
             m_ammo--;
 
             m_timer = 0;
             b_canShoot = false;
+            Recoil();
         }
 
 
@@ -107,11 +116,34 @@ namespace ThirdPersonShooterTemplate
         public void OnPickUp(ThirdPersonTemplate.Player player)
         {
             m_Holder = player;
+            m_initialRotation = transform.localRotation;
         }
 
         public void OnDropDown(ThirdPersonTemplate.Player player)
         {
             m_Holder = null;
+        }
+
+
+        private void Recoil()
+        {
+            float horizontalValue = UnityEngine.Random.Range(-m_horizontalRecoil, m_horizontalRecoil);
+            float verticalValue = UnityEngine.Random.Range(0, m_verticalRecoil);
+
+            m_currentRecoilAngle += verticalValue * Mathf.Rad2Deg * Time.deltaTime;
+
+            Quaternion targetRotation = Quaternion.Euler(transform.localEulerAngles + Vector3.right * (m_currentRecoilAngle));
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, .3f * Time.deltaTime);
+        }
+
+        public void Reposition()
+        {
+            m_currentRecoilAngle = Mathf.LerpAngle(m_currentRecoilAngle, 0, 2 * Time.deltaTime);
+            Debug.LogError(m_currentRecoilAngle);
+        }
+
+        public void SetRotate(float ang)
+        {
         }
     }
 }

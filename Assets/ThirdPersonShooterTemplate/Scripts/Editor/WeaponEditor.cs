@@ -15,6 +15,13 @@ namespace ThirdPersonShooterTemplate
 
         private SerializedProperty spFireRate;
 
+
+        private SerializedProperty spVerticalRecoil;
+        private SerializedProperty spHorizontalRecoil;
+
+        private SerializedProperty spRecoilSpeed;
+        private SerializedProperty spRecoilSmoothTime;
+
         private SerializedProperty spBulletPosition;
 
         private SerializedProperty spBulletPrefab;
@@ -32,6 +39,13 @@ namespace ThirdPersonShooterTemplate
             spBulletPrefab = serializedObject.FindProperty("m_BulletPrefab");
 
             spMuzzleFlash = serializedObject.FindProperty("m_MuzzleFlash");
+
+
+            spVerticalRecoil = serializedObject.FindProperty("m_verticalRecoil");
+            spHorizontalRecoil = serializedObject.FindProperty("m_horizontalRecoil");
+
+            spRecoilSpeed = serializedObject.FindProperty("m_recoilSpeed");
+            spRecoilSmoothTime = serializedObject.FindProperty("m_recoilSmoothTime");
         }
 
 
@@ -50,6 +64,12 @@ namespace ThirdPersonShooterTemplate
                 EditorGUILayout.PropertyField(spDamage);
                 EditorGUILayout.PropertyField(spMaxAmmo);
                 EditorGUILayout.PropertyField(spFireRate);
+                EditorGUILayout.Space();
+
+                EditorGUILayout.PropertyField(spVerticalRecoil);
+                EditorGUILayout.PropertyField(spHorizontalRecoil);
+                EditorGUILayout.PropertyField(spRecoilSpeed);
+                EditorGUILayout.PropertyField(spRecoilSmoothTime);
                 EditorGUILayout.Space();
 
                 EditorGUILayout.PropertyField(spBulletPosition);
