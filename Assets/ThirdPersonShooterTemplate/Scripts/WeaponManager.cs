@@ -159,7 +159,7 @@ namespace ThirdPersonShooterTemplate
 
             m_AimConstraint.weight = IsAiming ? 1 : 0;
             if (m_isAiming && m_CurrentWeapon)
-                m_CurrentWeapon.SetInitialRotation(m_CurrentWeapon.transform.localRotation);
+                m_CurrentWeapon.SetInitialRotation();
 
         }
 

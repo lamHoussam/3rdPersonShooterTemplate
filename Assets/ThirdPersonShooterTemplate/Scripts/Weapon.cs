@@ -139,12 +139,10 @@ namespace ThirdPersonShooterTemplate
 
         public void Reposition()
         {
-            float oldVal = m_currentRecoilAngle;
             m_currentRecoilAngle = Mathf.LerpAngle(m_currentRecoilAngle, 0, 2 * Time.deltaTime);
-
             transform.localRotation = Quaternion.Slerp(transform.localRotation, m_initialRotation, .3f * Time.deltaTime);
         }
 
-        public void SetInitialRotation(Quaternion rotation) => m_initialRotation = rotation;
+        public void SetInitialRotation() => m_initialRotation = transform.localRotation;
     }
 }
