@@ -107,20 +107,16 @@ namespace ThirdPersonShooterTemplate
 
             if (m_CurrentWeapon)
             {
-                float ang = Vector3.SignedAngle(m_AimSphere.position - m_CurrentWeapon.transform.position, -m_CurrentWeapon.transform.forward, Vector3.right);
+                float ang = Vector3.SignedAngle(m_AimSphere.position - m_CurrentWeapon.transform.position, m_CurrentWeapon.transform.forward, Vector3.right);
                 ang *= Mathf.Rad2Deg;
 
-
-                m_CurrentWeapon.SetRotate(ang);
+                m_CurrentWeapon.Reposition();
             }
         }
 
         public virtual void Shoot()
         {
             Vector3 shotDirection = (m_AimSphere.position - CurrentWeapon.ShotStartPosition).normalized;
-
-            //Vector3 direction = m_CurrentWeapon == null ? shotDirection : MathsUtility.RotateVector(shotDirection, m_CurrentWeapon.transform.eulerAngles.x, MathsUtility.Axis.X);
-            //Vector3 direction = m_CurrentWeapon == null ? shotDirection : ;
 
             CurrentWeapon.Shoot(shotDirection);
         }
@@ -162,6 +158,9 @@ namespace ThirdPersonShooterTemplate
             m_CameraLogicGraph.SetBool("aim", m_isAiming);
 
             m_AimConstraint.weight = IsAiming ? 1 : 0;
+            if (m_isAiming && m_CurrentWeapon)
+                m_CurrentWeapon.SetInitialRotation(m_CurrentWeapon.transform.localRotation);
+
         }
 
         public void SetAmmoText()

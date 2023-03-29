@@ -75,7 +75,6 @@ namespace ThirdPersonShooterTemplate
             if(m_Holder == null)
                 transform.Rotate(75 * Time.deltaTime * Vector3.up);
 
-            Reposition();
         }
 
         public virtual void Shoot(Vector3 direction)
@@ -130,20 +129,22 @@ namespace ThirdPersonShooterTemplate
             float horizontalValue = UnityEngine.Random.Range(-m_horizontalRecoil, m_horizontalRecoil);
             float verticalValue = UnityEngine.Random.Range(0, m_verticalRecoil);
 
-            m_currentRecoilAngle += verticalValue * Mathf.Rad2Deg * Time.deltaTime;
+            float val = verticalValue * Mathf.Rad2Deg * Time.deltaTime;
+
+            m_currentRecoilAngle += val;
 
             Quaternion targetRotation = Quaternion.Euler(transform.localEulerAngles + Vector3.right * (m_currentRecoilAngle));
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, .3f * Time.deltaTime);
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, 3 * Time.deltaTime);
         }
 
         public void Reposition()
         {
+            float oldVal = m_currentRecoilAngle;
             m_currentRecoilAngle = Mathf.LerpAngle(m_currentRecoilAngle, 0, 2 * Time.deltaTime);
-            Debug.LogError(m_currentRecoilAngle);
+
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, m_initialRotation, .3f * Time.deltaTime);
         }
 
-        public void SetRotate(float ang)
-        {
-        }
+        public void SetInitialRotation(Quaternion rotation) => m_initialRotation = rotation;
     }
 }

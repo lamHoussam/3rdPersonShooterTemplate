@@ -7194,7 +7194,7 @@ MonoBehaviour:
   m_damage: 6
   m_maxAmmo: 30
   m_fireRate: 8
-  m_verticalRecoil: 25
+  m_verticalRecoil: 13
   m_horizontalRecoil: 300
   m_recoilSpeed: 1.5
   m_recoilSmoothTime: 25.59
