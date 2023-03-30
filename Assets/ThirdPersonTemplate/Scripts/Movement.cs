@@ -116,6 +116,8 @@ namespace ThirdPersonTemplate
             m_isEndingClimb = false;
 
             m_planeMoveDirection = Vector2.zero;
+
+            m_CameraLogic.SetCameraSettingsFromGraph();
         }
 
 

@@ -1,7 +1,7 @@
 using CameraSystem;
 using ThirdPersonTemplate;
 using TMPro;
-using UnityEditor.Animations;
+//using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -25,7 +25,7 @@ namespace ThirdPersonShooterTemplate
         [SerializeField] private Transform m_AimSphere;
         [SerializeField] private float m_FireDistance;
 
-        private BlendTree m_BlendTree;
+        //private BlendTree m_BlendTree;
 
         [Space]
         [SerializeField] private TextMeshProUGUI m_AmmoText;
@@ -107,9 +107,6 @@ namespace ThirdPersonShooterTemplate
 
             if (m_CurrentWeapon)
             {
-                float ang = Vector3.SignedAngle(m_AimSphere.position - m_CurrentWeapon.transform.position, m_CurrentWeapon.transform.forward, Vector3.right);
-                ang *= Mathf.Rad2Deg;
-
                 m_CurrentWeapon.Reposition();
             }
         }

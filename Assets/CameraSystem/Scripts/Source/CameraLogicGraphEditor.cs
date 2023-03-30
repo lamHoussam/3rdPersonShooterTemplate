@@ -1,4 +1,6 @@
 
+
+#if UNITY_EDITOR
 using NodeEditorFramework;
 using UnityEditor;
 using UnityEngine;
@@ -42,3 +44,5 @@ namespace CameraSystem
         }
     }
 }
+
+#endif

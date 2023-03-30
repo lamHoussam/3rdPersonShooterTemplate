@@ -1,4 +1,7 @@
 using ThirdPersonTemplate;
+
+
+#if UNITY_EDITOR
 using UnityEditor;
 
 namespace ThirdPersonShooterTemplate
@@ -27,3 +30,5 @@ namespace ThirdPersonShooterTemplate
         }
     }
 }
+
+#endif

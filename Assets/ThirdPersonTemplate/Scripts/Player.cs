@@ -29,7 +29,7 @@ namespace ThirdPersonTemplate
 
             m_PlayerRaycaster = GetComponent<PlayerRaycaster>();
 
-            m_rightShoulder = true;
+            m_rightShoulder = false;
 
 
         }

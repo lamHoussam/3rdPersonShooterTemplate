@@ -1,6 +1,7 @@
 using UnityEngine;
 using ThirdPersonTemplate;
 using Unity.VisualScripting;
+using System.Transactions;
 
 namespace ThirdPersonShooterTemplate
 {
@@ -133,14 +134,14 @@ namespace ThirdPersonShooterTemplate
 
             m_currentRecoilAngle += val;
 
-            Quaternion targetRotation = Quaternion.Euler(transform.localEulerAngles + Vector3.right * (m_currentRecoilAngle));
+            Quaternion targetRotation = Quaternion.Euler(transform.localEulerAngles + transform.right * (m_currentRecoilAngle));
             transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, 3 * Time.deltaTime);
         }
 
         public void Reposition()
         {
             m_currentRecoilAngle = Mathf.LerpAngle(m_currentRecoilAngle, 0, 2 * Time.deltaTime);
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, m_initialRotation, .3f * Time.deltaTime);
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, m_initialRotation, 2 * Time.deltaTime);
         }
 
         public void SetInitialRotation() => m_initialRotation = transform.localRotation;

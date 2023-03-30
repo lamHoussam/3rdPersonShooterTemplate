@@ -9,7 +9,7 @@ namespace NodeEditorFramework
         [SerializeField] private string m_ParameterName;
         [SerializeField] private NodeEditorParameterValue m_Value;
 
-        private NodeCanvas m_NodeCanvas;
+        [SerializeField] private NodeCanvas m_NodeCanvas;
 
         #region API
         /// <summary>
@@ -118,6 +118,7 @@ namespace NodeEditorFramework
                 return true;
 
             NodeEditorParameter param = m_NodeCanvas.GetParameter(m_ParameterName);
+
             if (param.Type == ParameterType.Bool)
                 return m_Value.BoolValue == param.Value.BoolValue;
             else
